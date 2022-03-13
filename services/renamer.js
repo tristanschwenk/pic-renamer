@@ -13,6 +13,7 @@ export class Renamer {
             console.log(error)
             return 
         }
+        console.log(this.files) 
         return this.files
     }
 
@@ -20,12 +21,27 @@ export class Renamer {
         try {
             this.files.forEach(async (file, index) => {
                 const extension = file.slice(file.indexOf('.'))
-                await fs.rename(`${this.dir}/${file}`, `${this.dir}/${this.offset + index}${extension}`)
+                try {
+                    await fs.rename(`${this.dir}/${file}`, `${this.dir}/${parseInt(this.offset) + index}${extension}`)
+                }
+                catch(err) {
+                    console.error(err);
+                }
             })
             console.log(`successfully renamed ${this.files.length} files`)
         } catch (error) {
             console.error(error)
         }
+    }
+
+    orderFiles() {
+        this.files = this.files.sort((a,b) => {
+            console.log(a,b)
+            return parseInt(a.split(".")[0]) - parseInt(b.split(".")[0])
+        })
+        console.log(this.files)
+        return this.files
+
     }
 
     setDir(dir) {
@@ -37,7 +53,7 @@ export class Renamer {
     } 
 
     toString() {
-        console.log("\nCurrent Context :")
+        console.log("\nCurrent Context :") 
         console.log(`Folder: ${this.dir}`)
         console.log(`Offset: ${this.offset}\n`)
     }
