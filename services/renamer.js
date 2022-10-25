@@ -8,13 +8,21 @@ export class Renamer {
 
     async getFiles() {
         try {
-            this.files = await fs.readdir(this.dir)    
+            this.files = await fs.readdir(this.dir).then((data) => this.clearData(data))
+                
         } catch (error) {
             console.log(error)
             return 
         }
         console.log(this.files) 
         return this.files
+    }
+
+    clearData(data) {
+        if (data.indexOf(".DS_Store") !== -1) {
+            data.splice(data.indexOf('.DS_Store'), 1)
+        }
+        return data
     }
 
     async renameFiles() {
